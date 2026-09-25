@@ -32,7 +32,6 @@ window.APP_DATA = {
       { name:'Copilot', brand:'copilot', description:'Un asistente virtual de inteligencia artificial desarrollado por Microsoft que ayuda a crear, buscar información, programar y automatizar tareas cotidianas mediante lenguaje natural.' }
     ],
     growth: {
-      // Valores provisionales: la estructura ya funciona y se reemplaza por los números exactos de Figma.
       annual:[
         {label:'2022', value:1, note:'Texto anual exacto pendiente.'},
         {label:'2023', value:100, note:'Texto anual exacto pendiente.'},
