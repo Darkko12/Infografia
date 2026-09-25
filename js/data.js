@@ -8,9 +8,9 @@ window.APP_DATA = {
       { id:'gpt5', label:'GPT-5', date:'2025', title:'GPT-5', body:'Texto final pendiente de reemplazar por la versión exacta de Figma.' }
     ],
     openaiPeople: [
-      { name:'Sam Altman', role:'Referente de OpenAI', image:'assets/sam-altman.jpg', facts:['Texto 1 pendiente de la exportación final.','Texto 2 pendiente de la exportación final.','Texto 3 pendiente de la exportación final.'] },
-      { name:'Greg Brockman', role:'Referente de OpenAI', image:'assets/greg-brockman.jpg', facts:['Texto 1 pendiente de la exportación final.','Texto 2 pendiente de la exportación final.','Texto 3 pendiente de la exportación final.'] },
-      { name:'Ilya Sutskever', role:'Referente histórico de OpenAI', image:'assets/ilya-sutskever.jpg', facts:['Texto 1 pendiente de la exportación final.','Texto 2 pendiente de la exportación final.','Texto 3 pendiente de la exportación final.'] }
+      { name:'Sam Altman', role:'Referente de OpenAI', image:'assets/sam-altman.jpg', facts:['Empresario, inversionista, programador y bloguero estadounidense.','Director ejecutivo de OpenAI y expresidente de Y Combinator.','Figura principal en el desarrollo de la inteligencia artificial.'] },
+      { name:'Greg Brockman', role:'Referente de OpenAI', image:'assets/greg-brockman.jpg', facts:['Emprendedor e ingeniero de software estadounidense.','Cofundador y presidente de OpenAI.','Dejó Stripe en 2015 para cofundar OpenAI.'] },
+      { name:'Ilya Sutskever', role:'Referente histórico de OpenAI', image:'assets/ilya-sutskever.jpg', facts:['Informático teórico israelí-canadiense que trabaja en aprendizaje automático.','Cofundador y exjefe científico de OpenAI. Abandonó la compañía en 2024.','Ha realizado varias contribuciones importantes al campo del aprendizaje profundo.'] }
     ],
     competitors: {
       years:['2022','2023','2024','2025','2026'],
