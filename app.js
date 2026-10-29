@@ -122,7 +122,7 @@ function fixPrompts(){
  if(!fixed)return;
  for(const el of [...stage.querySelectorAll('p,div')])   // palabras sueltas superpuestas (color violeta fijo)
   if(el.style.color==='rgb(87, 61, 205)'&&!el.querySelector('.hl')&&!el.classList.contains('hl')&&el.dataset.nodeId)el.remove()}
-const traditional=['539:447','546:1129','546:1270','566:1774','585:498','616:870','616:1040'];const assisted=['781:2988','781:3218','781:3138','686:598','690:1108'];
+const traditional=['539:447','546:1129','546:1270','566:1774','585:498','616:870','616:1040'];const assisted=['781:2988','686:598','690:1108','781:3138','781:3218'];   // orden = notas de 73:402: DO idea · RE exploración · MI selección · FA ajustes · SOL obra musical
 /* Los avisos ya no se dibujan en pantalla: salen por la consola del navegador (F12) */
 function toast(t){console.log('[Electria] '+t)}
 function fit(){const v=$('#viewport'),scale=Math.min(v.clientWidth/1440,v.clientHeight/1024);stage.style.transform=`scale(${scale})`;stage.style.left=(v.clientWidth-1440*scale)/2+'px';stage.style.top=(v.clientHeight-1024*scale)/2+'px'}
