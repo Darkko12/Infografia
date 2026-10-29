@@ -68,10 +68,21 @@ window.Revisions=(()=>{
  }
  function wireExtra(){
   const entries=pending[current];if(!entries)return;
-  for(const [key,[name]]of Object.entries(entries))for(const label of words(noteNames[+key])){const r=srel(label);addHit({l:r.l-10,t:r.t-10,w:r.w+20,h:r.h+20},'Escuchar '+name,()=>playExtra(+key),'mp-circle').dataset.mp=key;}
+  // Círculo de la nota: siempre un cuadrado (ancho = alto) centrado en el círculo de color, para que "SOL" no se deforme en óvalo
+  const circleRect=label=>{
+   const prev=label.previousElementSibling,pr=prev&&prev.tagName==='DIV'?srel(prev):null;
+   if(pr&&pr.w>20&&pr.w<100&&Math.abs(pr.w-pr.h)<2)return pr;
+   const r=srel(label),cx=r.l+r.w/2,cy=r.t+r.h/2,d=Math.max(r.h+20,36);
+   return {l:cx-d/2,t:cy-d/2,w:d,h:d};
+  };
+  for(const [key,[name]]of Object.entries(entries))for(const label of words(noteNames[+key])){addHit(circleRect(label),'Escuchar '+name,()=>playExtra(+key),'mp-circle').dataset.mp=key;}
   if(current==='781:2988'){
+   // El aro verde se ajusta exactamente al recuadro oscuro de cada audio (357×70), no a una medida estimada desde el nombre
+   const boxes=[...stage.querySelectorAll('div')].filter(d=>/background:#16194e/.test(d.getAttribute('style')||'')).map(srel).filter(b=>b.w>300&&b.w<420&&b.h>50&&b.h<100);
    for(const [key,[name]]of Object.entries(entries))for(const label of words(name)){
-    const r=srel(label),hit={l:r.l-16,t:r.t-14,w:360,h:72};addHit(hit,'Escuchar '+name,()=>playExtra(+key),'mp-box').dataset.mp=key;
+    const r=srel(label),cx=r.l+r.w/2,cy=r.t+r.h/2;
+    const b=boxes.find(b=>cx>=b.l&&cx<=b.l+b.w&&cy>=b.t&&cy<=b.t+b.h)||{l:r.l-24,t:r.t-8,w:357,h:71};
+    const hit=addHit(b,'Escuchar '+name,()=>playExtra(+key),'mp-box');hit.dataset.mp=key;hit.style.borderRadius='10px';
    }
   }
   if(current==='274:260')for(const [key,[name]]of Object.entries(entries))for(const label of words(name)){
@@ -89,7 +100,16 @@ window.Revisions=(()=>{
   const entries=await RecordingLibrary.list();const root=$('#dialog-content');root.innerHTML='<h2>Biblioteca de opiniones</h2><p>Las grabaciones se guardan en este navegador y no se envían a ningún servidor.</p>';
   const names={'761:3661':'Herramienta de apoyo','761:3176':'Canciones completas','761:4140':'Depende del uso','761:2688':'En contra'};
   if(!entries.length){const p=document.createElement('p');p.textContent='Todavía no hay grabaciones. Elegí una opinión y compartila al micrófono.';root.appendChild(p)}
-  for(const entry of entries){const section=document.createElement('section'),p=document.createElement('p'),audio=document.createElement('audio');p.textContent=(names[entry.category]||'Opinión')+' · '+new Date(entry.createdAt).toLocaleString('es-AR');const url=URL.createObjectURL(entry.blob);libraryUrls.push(url);audio.controls=true;audio.src=url;section.append(p,audio);root.appendChild(section)}
+  for(const entry of entries){const section=document.createElement('section'),p=document.createElement('p'),audio=document.createElement('audio'),del=document.createElement('button');p.textContent=(names[entry.category]||'Opinión')+' · '+new Date(entry.createdAt).toLocaleString('es-AR');const url=URL.createObjectURL(entry.blob);libraryUrls.push(url);audio.controls=true;audio.src=url;
+   del.type='button';del.className='delete-recording';del.textContent='Eliminar';del.setAttribute('aria-label','Eliminar esta grabación');
+   del.onclick=async()=>{
+    if(!confirm('¿Eliminar esta grabación? No se puede deshacer.'))return;
+    del.disabled=true;audio.pause();
+    try{await RecordingLibrary.remove(entry.id)}catch{del.disabled=false;alert('No se pudo eliminar la grabación.');return}
+    URL.revokeObjectURL(url);libraryUrls=libraryUrls.filter(u=>u!==url);section.remove();
+    if(!root.querySelector('section')){const e=document.createElement('p');e.textContent='Todavía no hay grabaciones. Elegí una opinión y compartila al micrófono.';root.appendChild(e)}
+   };
+   section.append(p,audio,del);root.appendChild(section)}
   $('#dialog').showModal();
  }
  function enter(){
