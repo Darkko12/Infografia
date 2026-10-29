@@ -1,0 +1,11 @@
+<svg width="152" height="152" viewBox="0 0 152 152" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="angry-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="152" height="152">
+<rect width="152" height="152" fill="#fff"/>
+<path d="M40 48L66 61" stroke="#000" stroke-width="9" stroke-linecap="round"/>
+<path d="M112 48L86 61" stroke="#000" stroke-width="9" stroke-linecap="round"/>
+<circle cx="54" cy="76" r="7.5" fill="#000"/>
+<circle cx="98" cy="76" r="7.5" fill="#000"/>
+<path d="M48 114C58 96 94 96 104 114" stroke="#000" stroke-width="9" stroke-linecap="round"/>
+</mask>
+<circle cx="76" cy="76" r="66.5" fill="#5CF8BE" mask="url(#angry-mask)"/>
+</svg>
