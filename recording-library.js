@@ -18,5 +18,9 @@ window.RecordingLibrary=(()=>{
   else entries=await new Promise((resolve,reject)=>{const tx=db.transaction('recordings','readonly');const req=tx.objectStore('recordings').getAll();req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)});
   return entries.filter(x=>!category||x.category===category).sort((a,b)=>b.createdAt-a.createdAt);
  }
- return {save,list};
+ async function remove(id){const db=await ready;
+  if(!db){const i=memory.findIndex(x=>x.id===id);if(i>=0)memory.splice(i,1);return}
+  return new Promise((resolve,reject)=>{const tx=db.transaction('recordings','readwrite');tx.objectStore('recordings').delete(id);tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error)});
+ }
+ return {save,list,remove};
 })();
