@@ -144,3 +144,19 @@ body{display:block}
 #viewport{position:fixed;inset:0;z-index:1;background:#0c0819}
 #notice{bottom:24px}
 #notice{display:none!important}
+
+/* ===== Grabando: brillo que sube y baja en el micrófono ===== */
+#stage .rec-disc{border-radius:50%;animation:recGlow 1.4s ease-in-out infinite}
+#stage .rec-ring{animation:recRing 1.4s ease-in-out infinite}
+@keyframes recGlow{
+ 0%,100%{filter:drop-shadow(0 0 6px #5cf8be66) brightness(1);transform:scale(1)}
+ 50%{filter:drop-shadow(0 0 26px #5cf8bef2) drop-shadow(0 0 54px #5cf8be99) brightness(1.22);transform:scale(1.035)}}
+@keyframes recRing{
+ 0%,100%{filter:drop-shadow(0 0 4px #5cf8be44);opacity:.7;transform:scale(1)}
+ 50%{filter:drop-shadow(0 0 20px #5cf8bee6);opacity:1;transform:scale(1.045)}}
+@media(prefers-reduced-motion:reduce){#stage .rec-disc,#stage .rec-ring{animation-duration:3s}}
+
+/* Biblioteca: botón para eliminar una grabación */
+dialog button.delete-recording{display:block;margin:10px 0 14px auto;padding:7px 16px;border:1px solid #ff6b7a88;border-radius:20px;background:transparent;color:#ff9aa5;font-size:12px;transition:background .18s,color .18s}
+dialog button.delete-recording:hover,dialog button.delete-recording:focus-visible{background:#ff6b7a;color:#1a0a10;outline:none}
+dialog button.delete-recording:disabled{opacity:.5;cursor:default}
