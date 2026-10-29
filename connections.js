@@ -125,6 +125,10 @@ window.Connect=(()=>{
  function wire(){
   if(!FROM[current])lastCat=null;
   wireCarousel();
+ if(CAPTURE[current]&&recording){   // micrófono grabando: el disco y el aro laten con un brillo que sube y baja
+  const mic=stage.querySelector('[data-name="iconoir:microphone-speaking"]'),ring=mic&&mic.previousElementSibling,disc=ring&&ring.previousElementSibling;
+  if(disc)disc.classList.add('rec-disc');if(ring)ring.classList.add('rec-ring');
+ }
   if(current==='781:3218'){
    const row=(text,fn,label)=>{const p=words(text)[0];if(!p)return;const r=srel(p);addHit({l:r.l-80,t:r.t-8,w:340,h:r.h+16},label,fn,'mp-box')};
    for(const p of words('Reproducir'))action(p,toggleVideo,'Reproducir video');
