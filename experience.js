@@ -13,9 +13,8 @@ window.Experience=(()=>{
  function mute(value){if(narration)narration.muted=value;}
  function tutorial(){
   if(!['475:262','508:509','507:378'].includes(current))return;
-  const second=current==='508:509';
-  addHit({l:525,t:second?441:449,w:34,h:34},'Volver a la pantalla anterior',back);
-  addHit({l:second?566:578,t:second?441:449,w:34,h:34},'Reiniciar el recorrido',resetAll);
+  addHit({l:525,t:441,w:34,h:34},'Volver a la pantalla anterior',back);
+  addHit({l:566,t:441,w:34,h:34},'Reiniciar el recorrido',resetAll);   // mismos botones en las 3 pantallas del tutorial
   for(const p of stage.querySelectorAll('p')){
    const i=noteNames.indexOf(p.textContent.trim());if(i<0)continue;
    const rect=srel(p);if(rect.t>600)addHit({l:rect.l-5,t:rect.t-5,w:rect.w+10,h:rect.h+10},'Tocar '+noteNames[i],()=>note(i));
@@ -79,8 +78,8 @@ window.Experience=(()=>{
   imgs.forEach(async im=>{
    let text;try{text=await loadSvg(im.getAttribute('src'))}catch{return}
    if(token!==eqToken||current!==shown||!im.isConnected)return;
-   const svg=new DOMParser().parseFromString(text,'image/svg+xml').documentElement;
-   if(!svg||svg.nodeName.toLowerCase()!=='svg')return;
+   const holder=document.createElement('div');holder.innerHTML=text;const svg=holder.querySelector('svg');
+   if(!svg)return;
    if(!svg.getAttribute('viewBox')){const w=parseFloat(svg.getAttribute('width')),h=parseFloat(svg.getAttribute('height'));if(w&&h)svg.setAttribute('viewBox','0 0 '+w+' '+h)}
    svg.setAttribute('width','100%');svg.setAttribute('height','100%');svg.setAttribute('aria-hidden','true');svg.setAttribute('class','eq-svg');svg.style.cssText='display:block;position:absolute;inset:0;overflow:visible';
    const skip=el=>el.closest('defs,clipPath,mask,linearGradient,radialGradient,pattern,symbol');
@@ -89,8 +88,11 @@ window.Experience=(()=>{
     d.split(/(?=M)/).filter(x=>x.trim()).forEach(part=>{const c=p.cloneNode();c.setAttribute('d',part);p.before(c)});p.remove()});
    const shapes=[...svg.querySelectorAll('rect,path,line,polygon,polyline')].filter(e=>!skip(e));
    const target=shapes.length>1?shapes:[svg];
-   target.forEach(e=>{e.classList.add('eq-bar');e.style.setProperty('--d',(0.55+Math.random()*0.9).toFixed(2)+'s');e.style.setProperty('--dl',(-Math.random()*1.5).toFixed(2)+'s');e.style.setProperty('--lo',(0.2+Math.random()*0.35).toFixed(2))});
    im.replaceWith(svg);
+   if(reduce())return;
+   target.forEach(e=>{e.classList.add('eq-bar');e.style.transformBox='fill-box';e.style.transformOrigin='50% 100%';
+    const lo=0.2+Math.random()*0.35,dur=550+Math.random()*900;
+    e.animate([{transform:'scaleY('+lo.toFixed(2)+')'},{transform:'scaleY(1)'}],{duration:dur,delay:-Math.random()*dur,iterations:Infinity,direction:'alternate',easing:'ease-in-out'})});
   });
  }
  function enter(){
