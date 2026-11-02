@@ -157,7 +157,7 @@ window.Revisions=(()=>{
  function adjustments(){
   if(current!=='616:870')return;
   const grp=id=>byId(id)[0];
-  const place=(id,l,t)=>{const g=grp(id);if(!g||!g.firstElementChild)return;const r=srel(g.firstElementChild);[...g.children].forEach(c=>{c.style.translate=(l-r.l)+'px '+(t-r.t)+'px'})};
+  const place=(id,l,t)=>{const g=grp(id);if(!g||!g.firstElementChild)return;[...g.children].forEach(c=>{c.style.translate=''});const r=srel(g.firstElementChild);[...g.children].forEach(c=>{c.style.translate=(l-r.l)+'px '+(t-r.t)+'px'})};
   for(const id of ['616:1022','616:1023','768:2548']){const e=grp(id);if(e)e.style.display='none'}      // Masterizar y MI ya no van
   place('768:2542',628,428);place('616:920',628,504);        // Antes: DO + audio
   place('768:2545',628,620);place('616:1006',628,696);       // Después: RE + audio
