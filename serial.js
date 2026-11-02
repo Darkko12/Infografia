@@ -53,3 +53,4 @@ window.ArduinoButtons=(()=>{
  if(navigator.serial){navigator.serial.addEventListener('disconnect',()=>console.log('[Arduino] Desenchufado'));auto()}
  return {connect,press,MAP};
 })();
+
