@@ -214,11 +214,11 @@ function animateWaves(){
    const key=hit.dataset.mp;if(seen.has(key))continue;seen.add(key);
    const artist=current!=='616:870';let box=srel(hit);
    if(!artist){   // Ajustes: usar los contenedores donde quedaron después de moverlos (Antes arriba, Después abajo)
-    const cs=['616:921','616:1007'].map(id=>byId(id)[0]).filter(Boolean).map(srel).filter(r=>r.w>0).sort((a,b)=>a.t-b.t);
-    const c=cs[Math.min(+key,cs.length-1)];
+    const AJ=[{l:628,t:504,w:375,h:94.885},{l:628,t:696,w:375,h:94.885}];   // mismas coordenadas que place() en revisions.js: no dependen de cuándo se mida
+    const c=AJ[Math.min(+key,1)];
     if(c){box=c;hit.style.cssText=`left:${c.l}px;top:${c.t}px;width:${c.w}px;height:${c.h}px`;
-     const dot=byId(['768:2543','768:2546'][Math.min(+key,1)])[0],circ=stage.querySelector('.mp-circle[data-mp="'+key+'"]');
-     if(dot&&circ){const d=srel(dot);circ.style.cssText=`left:${d.l}px;top:${d.t}px;width:${d.w}px;height:${d.h}px`}}
+     const circ=stage.querySelector('.mp-circle[data-mp="'+key+'"]');
+     if(circ){const d=[{l:628,t:428},{l:628,t:620}][Math.min(+key,1)];circ.style.cssText=`left:${d.l}px;top:${d.t}px;width:59.18px;height:59.18px`}}
    }
    root.querySelectorAll('img').forEach(im=>{const r=srel(im);if(r.w>0&&r.l>=box.l-1&&r.l+r.w<=box.l+box.w+1&&r.t>=box.t-1&&r.t+r.h<=box.t+box.h+1&&!im.closest('[data-name*="play"]'))im.style.visibility='hidden'});
    const rect={l:box.l+(artist?34:72),t:box.t+(artist?33:28),w:box.w-(artist?54:96),h:artist?26:38};
