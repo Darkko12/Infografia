@@ -160,3 +160,116 @@ body{display:block}
 dialog button.delete-recording{display:block;margin:10px 0 14px auto;padding:7px 16px;border:1px solid #ff6b7a88;border-radius:20px;background:transparent;color:#ff9aa5;font-size:12px;transition:background .18s,color .18s}
 dialog button.delete-recording:hover,dialog button.delete-recording:focus-visible{background:#ff6b7a;color:#1a0a10;outline:none}
 dialog button.delete-recording:disabled{opacity:.5;cursor:default}
+
+/* ===== Núcleo 1 · fotos de los artistas: el aro verde acompaña a la barra de audio mientras suena ===== */
+#stage .media-hit.mp-photo{border-radius:50%;z-index:5}   /* por debajo de la nota (que se superpone al borde inferior de la foto) */
+#stage .media-hit.mp-photo.mp-on{box-shadow:0 0 0 3px #5cf8be,0 0 20px #5cf8bb99;background:transparent}
+
+/* ===== Diferencias entre cada proceso (differences.js) ===== */
+#stage .df-off{opacity:0!important;pointer-events:none}
+#stage .df-in{animation:df-in .55s cubic-bezier(.2,.7,.2,1) both}
+@keyframes df-in{from{opacity:0;translate:-34px 0}to{opacity:1;translate:0 0}}
+#stage .df-key{cursor:pointer;touch-action:manipulation;user-select:none;border-radius:50%;transition:filter .2s}
+#stage .df-key:hover{filter:brightness(1.12) drop-shadow(0 0 12px #ffffffaa)}
+#stage .df-pop{animation:df-pop .45s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes df-pop{from{opacity:0;scale:.3}to{opacity:1;scale:1}}
+#stage .df-out{animation:df-out .25s ease-in both}
+@keyframes df-out{to{opacity:0;scale:1.25}}
+#stage [data-diff] .hl{color:inherit}
+#stage [data-diff] a{cursor:pointer}
+#stage .df-sink{animation:df-sink .9s cubic-bezier(.5,0,.75,.5) both}
+@keyframes df-sink{from{translate:0 0;opacity:1}70%{opacity:1}to{translate:0 340px;opacity:0}}
+/* Resultado (359:1764): reproductor con onda animada */
+#stage .result-player{position:absolute;left:494px;top:677px;width:460px;height:90px;cursor:pointer}
+#stage .result-player .rp-btn{position:absolute;left:0;top:7px}
+#stage .result-player .rp-btn circle{fill:none;stroke:#8a38f5;stroke-width:4.8}
+#stage .result-player .rp-btn path{fill:#8a38f5}
+#stage .result-player .rp-pause{display:none}
+#stage .result-player.mp-on .rp-play{display:none}
+#stage .result-player.mp-on .rp-pause{display:inline}
+#stage .result-player .rp-wave{position:absolute;left:96px;top:0;fill:#8a38f5}
+#stage .result-player .rp-wave .wv{transform-box:fill-box;transform-origin:center}
+#stage .result-player.mp-on .rp-wave .wv{animation:gtwave .9s ease-in-out infinite alternate}
+
+/* Ondas animadas en todas las pantallas con audio (mismo latido que las barras del Núcleo 1) */
+#stage .aw-wave{position:absolute;pointer-events:none;overflow:visible}
+#stage .aw-wave rect{fill:#e4ccff;transform-box:fill-box;transform-origin:center}
+#stage .aw-wave.mp-on rect{animation:gtwave .9s ease-in-out infinite alternate}
+#stage .aw-mbar{transform-origin:center}
+#stage .mp-on .aw-mbar,#stage .aw-mbar.mp-on{animation:awbar .9s ease-in-out infinite alternate}
+@keyframes awbar{from{transform:scaleY(1)}to{transform:scaleY(.4)}}
+
+/* ===== Pantallas de actitudes: línea animada (nace en el punto) ===== */
+#stage .n3-lead-anim{border:0}
+#stage .n3-lead-anim::after{display:none}
+#stage .n3-lead-anim i{position:absolute;display:block;background:#70dec6}
+#stage .n3-lead-anim .v{top:0;width:1.6px;height:100%;transform-origin:50% 100%}
+#stage .n3-lead-anim .h{left:0;top:0;width:100%;height:1.6px}
+#stage .n3-lead-anim .dot{bottom:-4px;width:9px;height:9px;border-radius:50%}
+#stage .n3-lead-l.n3-lead-anim .v{right:0}#stage .n3-lead-l.n3-lead-anim .h{transform-origin:100% 50%}#stage .n3-lead-l.n3-lead-anim .dot{right:-3.7px}
+#stage .n3-lead-r.n3-lead-anim .v{left:0}#stage .n3-lead-r.n3-lead-anim .h{transform-origin:0 50%}#stage .n3-lead-r.n3-lead-anim .dot{left:-3.7px}
+/* Refinements: tutorials, final screen and audio-clock motion. */
+#stage .experience-btn{height:100%;width:100%;padding:10px 18px;border:1px solid #70dec688;border-radius:13px;background:linear-gradient(#543e9d,#589bad);color:#eafdfb;font-family:Michroma,sans-serif;font-size:19px;display:flex;align-items:center;justify-content:center;gap:8px;transition:filter .18s,translate .18s}
+#stage .experience-btn:hover{filter:brightness(1.2);translate:0 -2px}#stage .experience-btn:active{translate:0 2px}
+
+
+#stage .finish-experience{position:absolute;left:1090px;top:927px;width:300px;height:54px;font-size:16px;z-index:15}
+#stage .narration-controls{position:absolute;left:300px;top:900px;width:840px;height:62px;display:flex;align-items:center;gap:16px;z-index:10;padding:8px 16px;border-radius:18px;background:#191333ef;border:1px solid #fe57c755}#stage .narration-controls button{width:auto;white-space:nowrap;font-size:16px}.narration-controls progress{width:240px;accent-color:#fe57c7}.narration-controls span{font-size:14px}.association-term{opacity:0;transition:opacity .5s,filter .4s,scale .5s;scale:.9}.association-term.cue-visible{opacity:1;scale:1}.association-term.cue-current{filter:drop-shadow(0 0 12px #fe57c7);color:#fe57c7!important}
+.gentle-float{animation:gentleFloat 5s ease-in-out infinite}.tap{animation:chipTap .3s ease-out}@keyframes gentleFloat{50%{translate:0 -8px}}@keyframes chipTap{50%{filter:brightness(1.6);translate:0 4px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.association-term{scale:1}}
+@media(max-width:520px){#toolbar{height:auto;min-height:72px;flex-wrap:wrap;padding:7px}#toolbar nav{flex-wrap:wrap;justify-content:flex-end}#transport{height:auto;min-height:70px;flex-wrap:wrap}.notes{flex-wrap:wrap;max-width:100%}}
+#notice.visible{display:block!important}
+/* Toolbar remains hidden in the exhibition layout. Audio has its own visible control. */
+#sound-toggle{position:fixed;right:18px;top:16px;z-index:25;border:1px solid #70dec655;border-radius:20px;background:#13102de8;color:#70dec6;padding:9px 15px;font:12px Michroma,sans-serif}
+/* Contents groups need inherited visibility: opacity alone does not hide them. */
+.association-term:not(.cue-visible){visibility:hidden}.association-term.cue-visible{visibility:visible}
+.association-term.cue-visible>div,.association-term.cue-visible>p{animation:associationReveal .45s ease-out both}
+@keyframes associationReveal{from{opacity:0}to{opacity:1}}
+.final-equalizer{transform-origin:center bottom;animation:equalizerFloat 2.8s ease-in-out infinite}@keyframes equalizerFloat{50%{scale:1 .88;opacity:.8}}
+.association-outcome{visibility:hidden;opacity:0;transition:opacity .5s}.association-outcome.cue-visible{visibility:visible;opacity:1}
+/* Iara: every phase is rendered from the audio clock, including the glow. */
+.association-synced{visibility:hidden;--cue-alpha:0;--cue-offset:14px;--cue-glow:0px}
+.association-synced.cue-visible{visibility:visible}
+.association-synced p,.association-synced img{opacity:var(--cue-alpha);translate:0 var(--cue-offset);filter:drop-shadow(0 0 var(--cue-glow) #fe57c7)}
+.association-synced.cue-current p{color:#fe57c7!important}
+#stage .association-screen .narration-controls{left:240px;width:960px;gap:12px}
+#stage .narration-controls .narration-seek{flex:1;min-width:100px;accent-color:#fe57c7;cursor:pointer}
+#stage .narration-clock{font:14px Lexend,sans-serif;white-space:nowrap;color:#d1c6f5}
+#stage .narration-caption{position:absolute;left:270px;top:960px;width:900px;padding:10px 18px;text-align:center;font:17px/1.4 Lexend,sans-serif;background:#100e24eb;border-radius:12px;color:white;z-index:12}
+#stage .narration-caption[hidden]{display:none}
+
+#sound-toggle[hidden]{display:none!important}/* Tactile motion, without changing the original positions or dimensions. */
+#stage .motion-interactive{transition:filter .22s ease,box-shadow .22s ease,outline-color .22s ease;touch-action:manipulation}
+#stage .motion-interactive:focus-visible{outline:3px solid #5cf8be;outline-offset:6px}
+#stage .motion-interactive:active{filter:brightness(1.22)}
+#stage .mp-circle.motion-interactive:hover{box-shadow:0 0 0 2px #fe57c788,0 0 22px #fe57c755}
+#stage .mp-photo.motion-interactive:hover{box-shadow:0 0 0 3px #70dec6,0 0 24px #70dec655}
+.touch-bloom{position:fixed;width:50px;height:50px;margin:-25px 0 0 -25px;border:2px solid #70dec6;border-radius:50%;box-shadow:0 0 16px #fe57c777;z-index:999;pointer-events:none;transform-origin:center}
+@media(prefers-reduced-motion:reduce){.touch-bloom{display:none}#stage .motion-interactive{transition:none}}
+/* A short accent marks a successful choice; it never loops or hides the result. */
+@keyframes choiceAccent{0%,100%{outline-color:transparent}45%{outline-color:#70dec6}}
+#stage .motion-screen .opt-ok{outline:2px solid transparent;outline-offset:4px;animation:choiceAccent .7s ease-out}
+@media(prefers-reduced-motion:reduce){#stage .motion-screen .opt-ok{animation:none}}
+
+/* Corrections: compact waves remain inside their player; finishing action stays at the top. */
+#stage .finish-experience{left:1090px;top:36px;width:300px;height:54px}
+#stage .repaired-wave{pointer-events:none;z-index:4}
+#stage [data-experience="back"] svg,#stage [data-experience="reset"] svg{flex-shrink:0;display:block}
+
+/* Finalizar experiencia: flecha grande y tecla K visible */
+#stage .finish-experience{left:1020px;width:370px;gap:12px;font-size:16px}
+#stage .finish-experience .fe-arrow{width:30px;height:19px;flex-shrink:0}
+
+/* "Dale a DO": chip de la tecla dentro del botón de alternar opiniones */
+#stage .n3-dokey{position:relative;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+#stage .n3-dokey img{position:absolute;inset:0;width:100%;height:100%}
+#stage .n3-dokey b{position:relative;font:400 13px/1 Lexend,sans-serif;color:#fff}
+
+/* Pantalla final: todo desactivado salvo Reiniciar */
+#stage .experience-btn:disabled{opacity:.4;cursor:default;pointer-events:none;filter:none;translate:none}
+.final-lock #toolbar .brand{pointer-events:none}
+.final-lock #toolbar button:disabled,.final-lock #transport button:disabled{opacity:.4;cursor:default;pointer-events:none}
+
+/* Ecualizador animado (pantalla de inicio y final) */
+#stage .eq-bar{transform-box:fill-box;transform-origin:50% 100%;animation:eqBar var(--d,1s) ease-in-out var(--dl,0s) infinite alternate;will-change:transform}
+@keyframes eqBar{from{transform:scaleY(var(--lo,.3))}to{transform:scaleY(1)}}
