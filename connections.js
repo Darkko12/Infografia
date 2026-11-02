@@ -17,6 +17,15 @@ window.Connect=(()=>{
  let slideVideo=null;
  let templates={},carousel=null,pending=false,captureId=null,stream=null,limit=null;
  const recordings=new Map();let playback=null;
+ // Orden aleatorio de cada biblioteca: se mantiene mientras dura el recorrido y se vuelve a sortear al reiniciar
+ const orders=new Map();
+ async function shown(category){
+  const all=await RecordingLibrary.list(category),byKey=new Map(all.map(e=>[e.id,e]));
+  const ord=(orders.get(category)||[]).filter(id=>byKey.has(id));
+  for(const e of all)if(!ord.includes(e.id))ord.splice(Math.floor(Math.random()*(ord.length+1)),0,e.id);
+  orders.set(category,ord);return ord.slice(0,MAX).map(id=>byKey.get(id));
+ }
+ function reset(){stopPlayback();orders.clear()}
  function init(v){templates=v}
  // Las tres notas de voz son siempre las 3 más recientes de la categoría (la más nueva arriba).
  const ROWS=['761:a403','761:538','761:403'],MAX=3;
@@ -28,13 +37,13 @@ window.Connect=(()=>{
  function leave(id){stopPlayback();idx=-1;count=0;carousel=null;if(recording&&CAPTURE[captureId]&&id!==captureId)finish(true,false)}
  // Reproduce la opinión k de la categoría actual. wrap=true: da la vuelta al llegar a la última.
  async function play(k,wrap){
-  const category=current;const entries=(await RecordingLibrary.list(category)).slice(0,MAX);if(current!==category)return;count=entries.length;
+  const category=current;const entries=await shown(category);if(current!==category)return;count=entries.length;
   if(!entries.length){toast('Todavía no hay opiniones guardadas en esta categoría. Volvé atrás para compartir la tuya.');return}
   if(!wrap&&k>=entries.length){toast(entries.length===1?'Por ahora hay una sola opinión guardada en esta categoría.':'Por ahora hay '+entries.length+' opiniones guardadas en esta categoría.');return}
   const i=((k%entries.length)+entries.length)%entries.length;
   stopPlayback();stop();idx=i;
   const old=recordings.get(category);if(old)URL.revokeObjectURL(old);const url=URL.createObjectURL(entries[i].blob);recordings.set(category,url);
-  const me=playback=new Audio(url);me.onended=()=>{if(playback===me){playback=null;paint()}};paint();
+  const me=playback=BackgroundMusic.track(new Audio(url));me.onended=()=>{if(playback===me){playback=null;paint()}};paint();
   me.play().catch(()=>{if(playback===me)stopPlayback();toast('No se pudo reproducir la grabación')});
   if(entries.length>1)toast('Opinión '+(i+1)+' de '+entries.length);
  }
@@ -56,12 +65,12 @@ window.Connect=(()=>{
      toast(saved.persistent?'Tu opinión quedó guardada en este navegador. Ya podés escuchar las opiniones.':'Tu opinión quedó guardada durante esta sesión. Ya podés escuchar las opiniones.');
     }
    };
-   rec.start();recording=true;go(id);limit=setTimeout(()=>finish(false),60000);toast('Grabando… Tocá SOL para detener o RE para cancelar.');
-  }catch{stream?.getTracks().forEach(t=>t.stop());stream=null;recording=false;toast('No se pudo iniciar la grabación. Revisá el permiso del micrófono.');}
+   BackgroundMusic.setRecording(true);rec.start();recording=true;go(id);limit=setTimeout(()=>finish(false),60000);toast('Grabando… Tocá SOL para detener o RE para cancelar.');
+  }catch{stream?.getTracks().forEach(t=>t.stop());stream=null;recording=false;BackgroundMusic.setRecording(false);toast('No se pudo iniciar la grabación. Revisá el permiso del micrófono.');}
   finally{pending=false}
  }
  function finish(cancel=false,navigate=true){
-  if(!recording)return;const target=CAPTURE[captureId];recording=false;clearTimeout(limit);
+  if(!recording)return;const target=CAPTURE[captureId];recording=false;BackgroundMusic.setRecording(false);clearTimeout(limit);
   if(recorder&&recorder.state!=='inactive'){recorder.discard=cancel;recorder.stop();}
   stream?.getTracks().forEach(t=>t.stop());if(navigate&&target)go(target);
   if(cancel)toast('Grabación cancelada.');
@@ -115,6 +124,8 @@ window.Connect=(()=>{
    const mic=row.querySelector('[data-name="iconoir:microphone"]'),ico=mic&&mic.parentElement;if(ico)ico.classList.add('n3-ico');
    [...row.querySelectorAll('img')].filter(im=>!ico||!ico.contains(im)).forEach((im,i)=>{im.classList.add('n3-bar');im.style.setProperty('--i',i)});
   });
+  const hint=byId('761:401')[0];
+  if(hint){hint.innerHTML='<span>Dale a</span><span class="n3-dokey"><img alt="" src="assets/64765.svg"><b>DO</b></span><span>para alternar entre las opiniones</span>';Object.assign(hint.style,{display:'flex',alignItems:'center',justifyContent:'center',gap:'10px'})}
   RecordingLibrary.list(current).then(es=>{count=Math.min(es.length,MAX);paint()});paint();
   // porción + rótulo: todos crecen igual y se animan desde la selección anterior
   const setActive=c=>stage.querySelectorAll('[data-n3-cat],[data-n3-lab]').forEach(el=>el.classList.toggle('is-active',(el.dataset.n3Cat||el.dataset.n3Lab)===c));
@@ -157,11 +168,11 @@ window.Connect=(()=>{
  function onNote(i){
   if(CAPTURE[current]){if(i===1)finish(true);else if(i===4)finish(false);return true}
   if(current==='476:823'){const id=({3:'986:2583',5:'986:2583',4:'986:2740',2:'986:2770',1:'986:2800'})[i];if(id){start(id);return true}}
-  if(FROM[current]){const cat={1:'761:2688',2:'761:4140',3:'761:3661',4:'761:3176'}[i];if(cat){if(cat!==current)go(cat)}else if(i===5)preview();else if(i===7)nextOpinion();return true}
+  if(FROM[current]){const cat={1:'761:2688',2:'761:4140',3:'761:3661',4:'761:3176'}[i];if(cat){if(cat!==current)go(cat)}else if(i===5)preview();else if(i===0)nextOpinion();else if(i===7)go('1185:3087');return true}
   if(carousel){if(i===7)cycle();else if(i===0&&!toggleVideo())toast('Esta parte no tiene video. Presioná K para continuar.');return true}
   return false;
  }
  const isCapture=id=>!!CAPTURE[id];
  window.addEventListener('pagehide',()=>{if(recording)finish(true,false);stream?.getTracks().forEach(t=>t.stop());for(const url of recordings.values())URL.revokeObjectURL(url)});
- return {init,wire,onNote,start,isCapture,leave,cycle,preview,toggleVideo};
+ return {init,wire,onNote,start,isCapture,leave,reset,cycle,preview,toggleVideo};
 })();
